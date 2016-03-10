@@ -7,6 +7,7 @@ Two method are used:
 2. fitting a nelson siegel function
 
 check curve.js for explanation and comment
+
 you can download and execute locally by using the bootstrap.html file
 
 ![screenshot](https://github.com/croquelois/bootstrapSwap/blob/master/graph.png)
