@@ -10,4 +10,6 @@ check curve.js for explanation and comment
 
 you can download and execute locally by using the bootstrap.html file
 
+Try it at: http://croquelois.github.io/bootstrapSwap/index.html
+
 ![screenshot](https://github.com/croquelois/bootstrapSwap/blob/master/graph.png)
