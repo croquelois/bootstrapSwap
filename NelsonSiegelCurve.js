@@ -9,7 +9,12 @@
  */
 class NelsonSiegelCurve {
   constructor(){
-    this.reset();
+    this.b1 = 0;
+    this.b2 = 0;
+    this.b3 = 0;
+    this.b4 = 0;
+    this.l1 = 1;
+    this.l2 = 1;
   }
 
   /* This NS curve has 6 parameters
@@ -22,20 +27,16 @@ class NelsonSiegelCurve {
     this.b2 = rnd()*0.1;
     this.b3 = rnd()*0.1;
     this.b4 = rnd()*0.1;
-    this.l1 = rnd()*0.1;
-    this.l2 = rnd()*0.1;
+    this.l1 = Math.exp(rnd()*0.1);
+    this.l2 = Math.exp(rnd()*0.1);
   }
 
-  /* The NS formula itself, in the original formula l1 and l2 belong to the 
-   * range [0,+inf]. But to use this formula without any constraint, in our
-   * formulation l1 and l2 are the 'ln' version of the original one
-   * so I need to transform them, it cost two additional exp
-   */
+  /* The NS formula itself */
   rate(t){
     let p = this;
     if(!t) return p.b1 + p.b2;
-    let l1 = Math.exp(p.l1); // move from [-inf,+inf] to [0,+inf]
-    let l2 = l1+Math.exp(p.l2); // move from [-inf,+inf] to [0,+inf]
+    let l1 = p.l1;
+    let l2 = l1+p.l2;
     let tp1 = t/l1;
     let tp2 = t/l2;
     let e1 = Math.exp(-tp1);
@@ -65,8 +66,8 @@ class NelsonSiegelCurve {
       curve.b2 = x[1];
       curve.b3 = x[2];
       curve.b4 = x[3];
-      curve.l1 = x[4];
-      curve.l2 = x[5];
+      curve.l1 = Math.exp(x[4]); // move from [-inf,+inf] to [0,+inf]
+      curve.l2 = Math.exp(x[5]); // move from [-inf,+inf] to [0,+inf]
     }
     // the score is the sum of the square of the price of each swap
     function score(){
@@ -80,7 +81,7 @@ class NelsonSiegelCurve {
       set(x);
       return score();
     };
-    let guess = [curve.b1,curve.b2,curve.b3,curve.b4,curve.l1,curve.l2];
+    let guess = [curve.b1,curve.b2,curve.b3,curve.b4,Math.log(curve.l1),Math.log(curve.l2)];
     let bestParam = guess;
     let bestScore = score();
     function oneTry(){
@@ -97,7 +98,7 @@ class NelsonSiegelCurve {
     oneTry();
     for(let i=0;i<nbTry-1;i++){
       curve.reset();
-      guess = [curve.b1,curve.b2,curve.b3,curve.b4,curve.l1,curve.l2];
+      guess = [curve.b1,curve.b2,curve.b3,curve.b4,Math.log(curve.l1),Math.log(curve.l2)];
       oneTry();    
     }
     set(bestParam);
